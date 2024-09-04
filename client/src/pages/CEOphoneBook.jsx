@@ -6,7 +6,7 @@ import { Table, Modal, Button, Container, Form, Spinner, Dropdown } from 'react-
 import { GrView } from 'react-icons/gr';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { CiEdit } from 'react-icons/ci';
+import { FiEdit2 } from "react-icons/fi";
 import defaultimage from '../Assets/defaultimage.png'
 import DatePicker from 'react-datepicker'; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css";
@@ -249,9 +249,12 @@ const CEOphoneBook = () => {
     <>
       <HomeNavbar />
       <Container fluid>
-        <Button onClick={() => navigate('/generatereport')} >Call History</Button>
+
+        <div className='mt-4' style={{ display: 'flex', justifyContent: 'end', alignItems: 'end' }} >
+          <Button className='button_two' onClick={() => navigate('/generatereport')} >Call History</Button>
+        </div>
         {/* Filter by pipeline */}
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '10px' }} className='mt-5'>
+        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '10px' }} className='mt-4'>
           <div className="filter-container w-100">
             <label htmlFor="pipeline-filter">Filter by Pipeline</label>
             <Select
@@ -327,35 +330,49 @@ const CEOphoneBook = () => {
 
         </div>
 
-        <Table striped bordered hover responsive className='mt-3'>
-          <thead>
-            <tr>
-              <th className="equal-width">Number</th>
-              <th className="equal-width">Status</th>
-              <th className="equal-width">Call Status</th>
-              <th className="equal-width">Change Status</th>
-              <th className="equal-width">Pipeline</th>
-              <th className="equal-width">User</th>
-              <th className="equal-width">Add Comment</th>
-              <th className="equal-width">View Comments</th>
+        <Table hover bordered responsive className='mt-3 table_main_container' size='md'>
+          <thead style={{ backgroundColor: '#f8f9fd' }}>
+            <tr
+              className="teble_tr_class"
+              style={{
+                backgroundColor: '#e9ecef', // Light background color for the row
+                color: '#343a40', // Dark text color
+                borderBottom: '2px solid #dee2e6', // Bottom border for rows
+                transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+              }}
+            >
+              <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">User</th>
+              <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Pipeline</th>
+              <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Number</th>
+              <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Status</th>
+              <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Call Status</th>
+              <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Actions</th>
+              {/* <th className="equal-width">Add Comment</th>
+              <th className="equal-width">View Comments</th> */}
             </tr>
           </thead>
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((entry, index) => (
                 <tr key={index}>
-                  <td style={{ textAlign: 'center' }}>{entry.number}</td>
-                  <td style={{ textAlign: 'center' }}>{entry.status}</td>
+                  <td style={{ textAlign: 'center' }} className='table_td_class'>
+                    {entry.user?.name || 'N/A'}
+                  </td>
+                  <td className='table_td_class' style={{ textAlign: 'center' }}>{entry.pipeline?.name || 'N/A'}</td>
+                  <td className='table_td_class' style={{ textAlign: 'center' }}>{entry.number}</td>
+                  <td className='table_td_class' style={{ textAlign: 'center' }}>{entry.status}</td>
                   <td
                     style={{
                       textAlign: 'center',
                       backgroundColor: entry.calstatus === 'No Answer' ? 'green' : entry.calstatus === 'Not Interested' ? 'red' : 'transparent',
-                      color: entry.calstatus === 'No Answer' || entry.calstatus === 'Not Interested' ? 'white' : 'inherit'
+                      color: entry.calstatus === 'No Answer' || entry.calstatus === 'Not Interested' ? 'white' : 'inherit',
+
                     }}
+                    className='table_td_class'
                   >
                     {entry.calstatus}
                   </td>
-                  <td style={{ textAlign: 'center' }}>
+                  <td style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
                     {dropdownEntry && dropdownEntry._id === entry._id ? (
                       <Dropdown>
                         <Dropdown.Toggle className="dropdown_menu" id="dropdown-basic">
@@ -369,25 +386,34 @@ const CEOphoneBook = () => {
                         </Dropdown.Menu>
                       </Dropdown>
                     ) : (
-                      <CiEdit
-                        onClick={() => setDropdownEntry(entry)}
-                        style={{ fontSize: '20px', cursor: 'pointer' }}
-                      />
+
+                      <div className='editAction'>
+                        <FiEdit2
+                          onClick={() => setDropdownEntry(entry)}
+                          style={{ fontSize: '12px', cursor: 'pointer', color: 'white' }}
+                        />
+                        <div className="tooltip">Edit Status</div>
+                      </div>
                     )}
+
+                    <div className='addAction'>
+                      <MdAdd onClick={() => handleAddCommentClick(entry)} style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }} />
+                      <div className="tooltip">Add Comments</div>
+                    </div>
+
+                    <div className='viewAction'>
+                      <GrView
+                        style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }}
+                        onClick={() => handleViewCommentsClick(entry)}
+                      />
+                      <div className="tooltip">View Comments</div>
+                    </div>
                   </td>
-                  <td style={{ textAlign: 'center' }}>{entry.pipeline?.name || 'N/A'}</td>
+
+                  {/* <td style={{ textAlign: 'center' }}>
+                  </td>
                   <td style={{ textAlign: 'center' }}>
-                    {entry.user?.name || 'N/A'}
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <MdAdd onClick={() => handleAddCommentClick(entry)} style={{ fontSize: '20px', cursor: 'pointer' }} />
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    <GrView
-                      style={{ fontSize: '20px', cursor: 'pointer' }}
-                      onClick={() => handleViewCommentsClick(entry)}
-                    />
-                  </td>
+                  </td> */}
                 </tr>
               ))
             ) : (
@@ -399,7 +425,7 @@ const CEOphoneBook = () => {
         </Table>
 
         {/* Add Comment Modal */}
-        <Modal show={showAddCommentModal} onHide={() => setShowAddCommentModal(false)}>
+        <Modal show={showAddCommentModal} onHide={() => setShowAddCommentModal(false)} centered size="lg">
           <Modal.Header closeButton>
             <Modal.Title>Add Comment</Modal.Title>
           </Modal.Header>
@@ -415,10 +441,10 @@ const CEOphoneBook = () => {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowAddCommentModal(false)}>
+            {/* <Button variant="secondary" onClick={() => setShowAddCommentModal(false)}>
               Close
-            </Button>
-            <Button variant="primary" onClick={handleSaveComment}>
+            </Button> */}
+            <Button className='button_one' onClick={handleSaveComment}>
               Save Comment
             </Button>
           </Modal.Footer>
@@ -467,16 +493,16 @@ const CEOphoneBook = () => {
         </Modal>
 
         {/* Convert to Lead Confirmation Modal */}
-        <Modal show={showConvertModal} onHide={() => setShowConvertModal(false)}>
+        <Modal show={showConvertModal} onHide={() => setShowConvertModal(false)} centered >
           <Modal.Header closeButton>
             <Modal.Title>Confirm Conversion</Modal.Title>
           </Modal.Header>
           <Modal.Body>Are you sure you want to convert this status to Lead?</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowConvertModal(false)}>
+            {/* <Button variant="secondary" onClick={() => setShowConvertModal(false)}>
               Cancel
-            </Button>
-            <Button variant="primary" onClick={handleConfirmConversion}>
+            </Button> */}
+            <Button className='button_one' onClick={handleConfirmConversion}>
               Confirm
             </Button>
           </Modal.Footer>

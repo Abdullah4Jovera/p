@@ -122,7 +122,7 @@ const ImportCSVForm = ({ pipelines, users, onSubmit }) => {
                 />
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
-            <Button variant="secondary" type="submit" disabled={loading || !!error} className="w-100 mt-3">
+            <Button variant="secondary" type="submit" disabled={loading || !!error} className="w-100 mt-3 button_one">
                 {loading ? 'Uploading...' : 'Upload'}
             </Button>
             {message && <p style={{ color: 'red' }}>{message}</p>}

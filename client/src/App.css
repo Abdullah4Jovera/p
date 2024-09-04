@@ -1,37 +1,145 @@
-.App {
-  text-align: center;
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f9fbfa;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.viewAction {
+  background-color: #ffa21d;
+  position: relative;
+  display: inline-block;
+  border-radius: 10px;
+  width: 29px;
+  height: 28px;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.editAction {
+  background-color: #3ec9d6;
+  border-radius: 10px;
+  width: 29px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  display: inline-block;
+}
+
+.addAction {
+  background-color: #3cbe52;
+  position: relative;
+  display: inline-block;
+  border-radius: 10px;
+  width: 29px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewAction .tooltip,
+.editAction .tooltip,
+.addAction .tooltip {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+.viewAction .tooltip::after,
+.editAction .tooltip::after,
+.addAction .tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.viewAction:hover .tooltip,
+.editAction:hover .tooltip,
+.addAction:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.table_main_container {
+  box-shadow: 30px 6px 30px rgba(182, 186, 203, 0.3);
+  margin-bottom: 24px;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.table_td_class {
+  padding: '10px 15px';
+  text-align: center;
+  vertical-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  border-right: '1px solid #dee2e6';
+  transition: 'transform 0.3s ease, background-color 0.3s ease',
+}
+
+.button_one,
+.button_one:hover,
+.button_one:active,
+.button_one:focus-visible,
+.button_one:focus-visible {
+  background-color: #b9406b;
+  border: none;
+}
+
+.button_two,
+.button_two:hover,
+.button_two:active,
+.button_two:focus-visible,
+.button_two:focus-visible {
+  background-color: #6fd943;
+  border: none;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.cancel_btn,
+.cancel_btn:hover,
+.cancel_btn:active,
+.cancel_btn:focus-visible,
+.cancel_btn:focus-visible {
+  background-color: #e9ecf0;
+  border: none;
+  color: black;
 }
+
+.create_account,
+.create_account:hover,
+.create_account:active,
+.create_account:focus-visible,
+.create_account:focus-visible {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(233, 189, 90, 0.5));
+  border: none;
+  color: black;
+}
+
 
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

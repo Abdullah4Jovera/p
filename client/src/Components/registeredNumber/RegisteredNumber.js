@@ -3,7 +3,7 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Container, Table, Form, Spinner } from 'react-bootstrap';
 import Select from 'react-select';
-import { GrView } from 'react-icons/gr';
+import { AiOutlineEye } from "react-icons/ai";
 import HomeNavbar from '../navbar/Navbar';
 import { MdOutlineAddCircle } from 'react-icons/md';
 import ImportCSVForm from '../ImportCSv'; // Fixed import
@@ -151,7 +151,7 @@ const RegisteredNumber = () => {
     };
 
     const handleCSVUpload = async (formData) => {
-        try {  
+        try {
             const response = await axios.post(`/api/phonebook/upload-csv-for-superadmin`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
@@ -167,24 +167,19 @@ const RegisteredNumber = () => {
         <>
             <HomeNavbar />
             <Container fluid>
-           
-                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '20px' }} className='mt-4'>
-                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
 
-                        <h2>Phonebook Management</h2>
-                        <Button variant="outline-success" onClick={handleShow}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'end', justifyContent:'end' }} className='mt-4' >
+
+                        <Button className='button_one' onClick={handleShow}>
                             <MdOutlineAddCircle style={{ marginTop: '-2px' }} /> Import CSV
                         </Button>
+
+                        <Button className='create_account' onClick={() => navigate('/createuser')} >Create Account</Button>
+                        <Button className='button_two' onClick={() => navigate('/generatereport')} >Call History</Button>
+                        <Button className='cancel_btn' onClick={() => navigate('/allusers')} >All Users</Button>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }} >
-                        <Button variant="outline-success" onClick={() => navigate('/createuser')} >Create Account</Button>
-                        <Button variant="outline-success" onClick={() => navigate('/allusers')} >All Users</Button>
-                        <Button variant="outline-success" onClick={() => navigate('/generatereport')} >Call History</Button>
-                    </div>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '10px' }} className='mt-5'>
+                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '10px' }} className='mt-4'>
                     {/* Filter by pipeline */}
                     <div className="filter-container w-100">
                         <label htmlFor="pipeline-filter">Filter by Pipeline:</label>
@@ -264,44 +259,55 @@ const RegisteredNumber = () => {
 
 
 
-                <Table striped bordered hover className="mt-3">
-                    <thead>
-                        <tr>
-                            <th className="equal-width">Number</th>
-                            <th className="equal-width">Status</th>
-                            <th className="equal-width">Call Status</th>
-                            <th className="equal-width">Pipeline</th>
-                            <th className="equal-width">User</th>
-                            <th className="equal-width">View Comments</th>
+                <Table hover bordered responsive className='mt-3 table_main_container' size='md'>
+                    <thead style={{ backgroundColor: '#f8f9fd' }}>
+                        <tr
+                            style={{
+                                backgroundColor: '#e9ecef', // Light background color for the row
+                                color: '#343a40', // Dark text color
+                                borderBottom: '2px solid #dee2e6', // Bottom border for rows
+                                transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+                            }}
+                        >
+                            <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Number</th>
+                            <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Status</th>
+                            <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Call Status</th>
+                            <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Pipeline</th>
+                            <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">User</th>
+                            <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">View Comments</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredData.length > 0 ? (
                             filteredData.map((entry) => (
                                 <tr key={entry._id}>
-                                    <td style={{ textAlign: 'center' }}>
+                                    <td className='table_td_class'>
                                         <a href={`tel:${entry.number}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                             {entry.number}
                                         </a>
                                     </td>
-                                    <td style={{ textAlign: 'center' }}>{entry.status}</td>
+                                    <td className='table_td_class'>{entry.status}</td>
                                     <td
                                         style={{
                                             textAlign: 'center',
                                             backgroundColor: entry.calstatus === 'No Answer' ? 'green' : entry.calstatus === 'Not Interested' ? 'red' : 'transparent',
                                             color: entry.calstatus === 'No Answer' || entry.calstatus === 'Not Interested' ? 'white' : 'inherit'
                                         }}
+                                        className='table_td_class'
                                     >
                                         {entry.calstatus}
                                     </td>
-                                    <td style={{ textAlign: 'center' }}>{entry.pipeline?.name || 'N/A'}</td>
-                                    <td style={{ textAlign: 'center' }}>{entry.user?.name || 'N/A'}</td>
+                                    <td className='table_td_class'>{entry.pipeline?.name || 'N/A'}</td>
+                                    <td className='table_td_class'>{entry.user?.name || 'N/A'}</td>
                                     <td style={{ textAlign: 'center' }}>
 
-                                        <GrView onClick={() => handleViewCommentsClick(entry)}
-                                            style={{ fontSize: '20px', cursor: 'pointer' }}
-                                        />
+                                        <div className='viewAction'>
+                                            <AiOutlineEye onClick={() => handleViewCommentsClick(entry)}
+                                                style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }}
 
+                                            />
+                                            <div className="tooltip">View Comments</div>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -359,7 +365,7 @@ const RegisteredNumber = () => {
                 </Modal>
 
                 {/* Import CSV Modal */}
-                <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+                <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} centered size="lg">
                     <Modal.Header closeButton>
                         <Modal.Title>Import CSV</Modal.Title>
                     </Modal.Header>

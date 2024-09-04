@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import HomeNavbar from '../Components/navbar/Navbar';
 import axios from 'axios';
-import { GrView } from 'react-icons/gr';
-import { Table, Modal, Button, Form, Dropdown } from 'react-bootstrap';
+import { AiOutlineEye } from "react-icons/ai";
+import { Table, Modal, Button, Form, Dropdown, Card } from 'react-bootstrap';
 import Select from 'react-select';
 import { MdAdd } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { CiEdit } from 'react-icons/ci';
+import { FiEdit2 } from "react-icons/fi";
 import defaultimage from '../Assets/defaultimage.png'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -36,7 +36,6 @@ const HodPhoneBook = () => {
     const [selectedAgent, setSelectedAgent] = useState(null);
     const navigate = useNavigate();
 
-    console.log(commentsToView, 'commentsToViewcommentsToView')
     const allowedRoles = [
         'HOD',
         'Team Leader',
@@ -143,10 +142,6 @@ const HodPhoneBook = () => {
         setSelectedUser(null);
     };
 
-    const clearSelectedCalStatus = () => {
-        setSelectedCalStatus(null);
-    };
-
     // Add Comment API
     const handleSaveComment = async () => {
         if (selectedEntry && currentComment.trim()) {
@@ -249,7 +244,7 @@ const HodPhoneBook = () => {
         if (selectedFile) {
             const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
             if (fileExtension !== 'csv') {
-                setError('Only CSV files are allowed.');
+                setError('Only CSV files are Allowed.');
                 setCsvFile(null); // Clear the file input
             } else {
                 setError('');
@@ -257,7 +252,7 @@ const HodPhoneBook = () => {
             }
         }
     };
-    
+
     const handleImportSubmit = async () => {
         if (selectedUsers.length > 0 && csvFile && selectedAgent) {
             const userData = JSON.parse(localStorage.getItem('phoneUserData'));
@@ -286,22 +281,23 @@ const HodPhoneBook = () => {
                 } catch (error) {
                     console.error('Error uploading CSV:', error);
                 }
-            } else { 
+            } else {
                 navigate('/');
             }
         }
     };
-   
+
 
     return (
         <>
             <HomeNavbar />
-
             <div className="phonebook-container">
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', alignItems: 'center',  marginBottom:'20px'}}>
-                <Button onClick={() => setShowImportModal(true)}>Import CSV</Button>
-                <Button variant="outline-success" onClick={() => navigate('/generatereport')} >Call History</Button>
+
+                <div style={{ display: 'flex', justifyContent: 'end', gap: '15px', alignItems: 'end', marginBottom: '20px', marginTop: '-10px' }}>
+                    <Button className='button_one' onClick={() => setShowImportModal(true)}>Import CSV</Button>
+                    <Button className='button_two' onClick={() => navigate('/generatereport')} >Call History</Button>
                 </div>
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '15px', alignItems: 'center' }}>
                     <Form.Group controlId="searchBarNumber" className='w-100'>
                         <Form.Control
@@ -309,6 +305,7 @@ const HodPhoneBook = () => {
                             placeholder="Search by Number"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            className='searchfield'
                         />
                     </Form.Group>
 
@@ -319,6 +316,7 @@ const HodPhoneBook = () => {
                             onChange={setSelectedUser}
                             placeholder="Select User"
                             isClearable
+                            className='searchfield'
                         />
                     </Form.Group>
 
@@ -329,6 +327,7 @@ const HodPhoneBook = () => {
                             onChange={setSelectedCalStatus}
                             placeholder="Select Call Status"
                             isClearable
+                            className='searchfield'
                         />
                     </Form.Group>
 
@@ -338,14 +337,14 @@ const HodPhoneBook = () => {
                             onChange={date => setStartDate(date)}
                             placeholderText="Start Date"
                             dateFormat="yyyy/MM/dd"
-                            className="form-control"
+                            className="form-control searchfield"
                         />
                         <DatePicker
                             selected={endDate}
                             onChange={date => setEndDate(date)}
                             placeholderText="End Date"
                             dateFormat="yyyy/MM/dd"
-                            className="form-control"
+                            className="form-control searchfield"
                         />
                     </div>
                 </div>
@@ -356,34 +355,42 @@ const HodPhoneBook = () => {
                         <p style={{ color: 'red' }}>{error}</p>
                     ) : hasAccess ? (
                         filteredPhonebookData.length > 0 ? (
-                            <Table striped bordered hover responsive className='mt-3'>
-                                <thead>
-                                    <tr className='teble_tr_class'>
-                                        <th className="equal-width">Number</th>
-                                        <th className="equal-width">Status</th>
-                                        <th className="equal-width">Call Status</th>
-                                        <th className="equal-width">Change Status</th>
-                                        <th className="equal-width">Pipeline</th>
-                                        <th className="equal-width">User</th>
-                                        <th className="equal-width">Add Comments</th>
-                                        <th className="equal-width">View Comments</th>
+
+                            <Table hover bordered responsive className='mt-3 table_main_container' size='md' >
+                                <thead style={{ backgroundColor: '#f8f9fd' }}>
+                                    <tr className="teble_tr_class"
+                                        style={{
+                                            backgroundColor: '#e9ecef', // Light background color for the row
+                                            color: '#343a40', // Dark text color
+                                            borderBottom: '2px solid #dee2e6', // Bottom border for rows
+                                            transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+                                        }}
+                                    >
+                                        <th className="equal-width" style={{ backgroundColor: '#f8f9fd' }}>User</th>
+                                        <th className="equal-width" style={{ backgroundColor: '#f8f9fd' }}>Pipeline</th>
+                                        <th className="equal-width" style={{ backgroundColor: '#f8f9fd' }}>Phone</th>
+                                        <th className="equal-width" style={{ backgroundColor: '#f8f9fd' }}>Call Status</th>
+                                        <th className="equal-width" style={{ backgroundColor: '#f8f9fd' }}>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredPhonebookData.map((entry, index) => (
                                         <tr key={index}>
-                                            <td style={{ textAlign: 'center' }}>{entry.number}</td>
-                                            <td style={{ textAlign: 'center' }}>{entry.status}</td>
                                             <td
-                                                style={{
-                                                    textAlign: 'center',
-                                                    backgroundColor: entry.calstatus === 'No Answer' ? 'green' : entry.calstatus === 'Not Interested' ? 'red' : 'transparent',
-                                                    color: entry.calstatus === 'No Answer' || entry.calstatus === 'Not Interested' ? 'white' : 'inherit'
-                                                }}
+                                                className='table_td_class'
+                                            >{entry.user.name}</td>
+                                            <td
+                                                className='table_td_class'
+                                            >{entry.pipeline.name}</td>
+                                            <td
+                                                className='table_td_class'
+                                            >{entry.number}</td>
+                                            <td
+                                                className='table_td_class'
                                             >
                                                 {entry.calstatus}
                                             </td>
-                                            <td style={{ textAlign: 'center' }}>
+                                            <td style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
                                                 {dropdownEntry && dropdownEntry._id === entry._id ? (
                                                     <Dropdown>
                                                         <Dropdown.Toggle className="dropdown_menu" id="dropdown-basic">
@@ -397,24 +404,34 @@ const HodPhoneBook = () => {
                                                         </Dropdown.Menu>
                                                     </Dropdown>
                                                 ) : (
-                                                    <CiEdit
-                                                        onClick={() => setDropdownEntry(entry)}
-                                                        style={{ fontSize: '20px', cursor: 'pointer' }}
-                                                    />
+
+                                                    <div className='editAction'>
+                                                        <FiEdit2
+                                                            onClick={() => setDropdownEntry(entry)}
+                                                            style={{ fontSize: '12px', cursor: 'pointer', color: 'white' }}
+                                                        />
+                                                        <div className="tooltip">Edit Status</div>
+                                                    </div>
                                                 )}
-                                            </td>
-                                            <td style={{ textAlign: 'center' }}>{entry.pipeline.name}</td>
-                                            <td style={{ textAlign: 'center' }}>{entry.user.name}</td>
-                                            <td style={{ textAlign: 'center' }}>
-                                                <MdAdd onClick={() => handleAddCommentClick(entry)} style={{ fontSize: '20px', cursor: 'pointer' }} />
-                                            </td>
-                                            <td style={{ textAlign: 'center' }}>
-                                                <GrView onClick={() => handleViewCommentsClick(entry)} style={{ fontSize: '20px', cursor: 'pointer' }} />
+
+                                                <div className='addAction'>
+                                                    <MdAdd
+                                                        onClick={() => handleAddCommentClick(entry)}
+                                                        style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }}
+                                                    />
+                                                    <div className="tooltip">Add Comments</div>
+                                                </div>
+
+                                                <div className='viewAction'>
+                                                    <AiOutlineEye onClick={() => handleViewCommentsClick(entry)} style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }} />
+                                                    <div className="tooltip">View Comments</div>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </Table>
+
                         ) : (
                             <p className='text-center mt-5'>No Data Available</p>
                         )
@@ -469,7 +486,7 @@ const HodPhoneBook = () => {
                 </Modal>
 
                 {/* Add Comment Modal */}
-                <Modal show={showAddCommentModal} onHide={() => setShowAddCommentModal(false)}>
+                <Modal show={showAddCommentModal} onHide={() => setShowAddCommentModal(false)} centered size="lg">
                     <Modal.Header closeButton>
                         <Modal.Title>Add Comment</Modal.Title>
                     </Modal.Header>
@@ -485,32 +502,32 @@ const HodPhoneBook = () => {
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowAddCommentModal(false)}>
+                        {/* <Button variant="secondary" onClick={() => setShowAddCommentModal(false)}>
                             Close
-                        </Button>
-                        <Button variant="secondary" onClick={handleSaveComment}>
+                        </Button> */}
+                        <Button className='button_one' onClick={handleSaveComment}>
                             Save Comment
                         </Button>
                     </Modal.Footer>
                 </Modal>
 
                 {/* Convert to Lead Confirmation Modal */}
-                <Modal show={showConvertModal} onHide={() => setShowConvertModal(false)}>
+                <Modal show={showConvertModal} onHide={() => setShowConvertModal(false)} centered>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Conversion</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>Are you sure you want to convert this status to Lead?</Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowConvertModal(false)}>
+                        {/* <Button variant="secondary" onClick={() => setShowConvertModal(false)}>
                             Cancel
-                        </Button>
-                        <Button variant="primary" onClick={handleConfirmConversion}>
+                        </Button> */}
+                        <Button className='button_one' onClick={handleConfirmConversion}>
                             Confirm
                         </Button>
                     </Modal.Footer>
                 </Modal>
 
-                <Modal show={showImportModal} onHide={() => setShowImportModal(false)}>
+                {/* <Modal show={showImportModal} onHide={() => setShowImportModal(false)} style={{ borderRadius:'20px' }} >
                     <Modal.Header closeButton>
                         <Modal.Title>Import CSV</Modal.Title>
                     </Modal.Header>
@@ -535,32 +552,87 @@ const HodPhoneBook = () => {
                                     onChange={setSelectedUsers}
                                     placeholder="Select Users"
                                     isMulti
-                                    isClearable 
+                                    isClearable
                                 />
                             </Form.Group>
 
                             <Form.Group controlId="csvFile">
-    <Form.Label>Upload CSV</Form.Label>
-    <Form.Control 
-        type="file" 
-        accept=".csv" 
-        onChange={handleFileChange} 
-    />
-    {error && <Form.Text className="text-danger">{error}</Form.Text>}
-</Form.Group>
+                                <Form.Label>Upload CSV</Form.Label>
+                                <Form.Control
+                                    type="file"
+                                    accept=".csv"
+                                    onChange={handleFileChange}
+                                />
+                                {error && <Form.Text className="text-danger">{error}</Form.Text>}
+                            </Form.Group>
 
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowImportModal(false)}>
+                        <Button className='cancel_btn' onClick={() => setShowImportModal(false)}>
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={handleImportSubmit}>
+                        <Button className='button_one'  onClick={handleImportSubmit}>
+                            Upload
+                        </Button>
+                    </Modal.Footer>
+                </Modal> */}
+
+                <Modal
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    show={showImportModal} onHide={() => setShowImportModal(false)} style={{ borderRadius: '20px' }}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Import CSV</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group controlId="selectAgent" className='w-100'>
+                                <Form.Label>Select Agent</Form.Label>
+                                <Select
+                                    options={allUsers}  // Assuming allUsers is a list of user objects with `value` and `label`
+                                    value={selectedAgent}
+                                    onChange={setSelectedAgent}
+                                    placeholder="Select an Agent"
+                                    isClearable
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId="selectUser" className='w-100'>
+                                <Form.Label>Select Team Leader / Coordinator </Form.Label>
+                                <Select
+                                    options={allUsers}
+                                    value={selectedUsers}
+                                    onChange={setSelectedUsers}
+                                    placeholder="Select Users"
+                                    isMulti
+                                    isClearable
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId="csvFile">
+                                <Form.Label>Upload CSV</Form.Label>
+                                <Form.Control
+                                    type="file"
+                                    accept=".csv"
+                                    onChange={handleFileChange}
+                                />
+                                {error && <Form.Text className="text-danger">{error}</Form.Text>}
+                            </Form.Group>
+
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        {/* <Button className='cancel_btn' onClick={() => setShowImportModal(false)}>
+                            Cancel
+                        </Button> */}
+                        <Button className='button_one' onClick={handleImportSubmit}>
                             Upload
                         </Button>
                     </Modal.Footer>
                 </Modal>
-
             </div>
         </>
     );

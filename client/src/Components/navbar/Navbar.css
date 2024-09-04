@@ -47,3 +47,12 @@
     gap: 15px;
     align-items: center;
 }
+
+.logout_btn,
+.logout_btn:hover,
+.logout_btn:visited,
+.logout_btn:focus,
+.logout_btn:focus-visible {
+    background-color: red;
+    border: none;
+}

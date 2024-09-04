@@ -42,13 +42,13 @@ function HomeNavbar() {
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <Link className='navbar_btn' to='/'> <IoHomeOutline style={{ marginTop: '-3px' }} /> Home</Link>
                             <Link className='navbar_btn' to='/profile'> <CgProfile style={{ marginTop: '-3px' }} /> Profile</Link>
-                            <Link className='navbar_btn' to='/leadconverted'> <IoMdCheckmark style={{ marginTop: '-3px' }} /> Lead Converted Numbers</Link>
-                            <Link className='navbar_btn' to='/blocklist'> <MdOutlineBlock style={{ marginTop: '-2px' }} /> BlockList Number</Link>
+                            <Link className='navbar_btn' to='/leadconverted'> <IoMdCheckmark style={{ marginTop: '-3px' }} /> Converted Lead</Link>
+                            <Link className='navbar_btn' to='/blocklist'> <MdOutlineBlock style={{ marginTop: '-2px' }} /> BlockList</Link>
                         </div>
                     </Nav>
 
                     <div className="ml-auto">
-                        <Button variant="outline-danger" onClick={logoutHandler}> <IoMdLogOut style={{ marginTop: '-2px' }} /> Logout</Button>
+                        <Button className='logout_btn' onClick={logoutHandler}> <IoMdLogOut style={{ marginTop: '-2px' }} /> Logout</Button>
                     </div>
 
                 </Container>

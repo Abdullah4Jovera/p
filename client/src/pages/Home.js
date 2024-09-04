@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Table, Modal, Button, Form, Dropdown, Spinner } from 'react-bootstrap';
 import { MdAdd } from 'react-icons/md';
 import axios from 'axios';
-import { GrView } from 'react-icons/gr';
-import { CiEdit } from 'react-icons/ci';
+import { AiOutlineEye } from "react-icons/ai";
+import { FiEdit2 } from "react-icons/fi";
 import './style.css';
 import defaultimage from '../Assets/defaultimage.png'
 
@@ -208,32 +208,40 @@ const Home = () => {
                 </div>
 
                 {filteredPhonebookData.length > 0 ? (
-                    <Table striped bordered hover responsive>
-                        <thead>
-                            <tr>
-                                <th className="equal-width">Number</th>
-                                <th className="equal-width">Status</th>
-                                <th className="equal-width">Call Status</th>
-                                <th className="equal-width">Edit Status</th>
-                                <th className="equal-width">Add Comments</th>
-                                <th className="equal-width">View Comments</th>
+                    <Table hover bordered responsive className='mt-3 table_main_container' size='md'>
+                        <thead style={{ backgroundColor: '#f8f9fd' }}>
+                            <tr
+                                className="teble_tr_class"
+                                style={{
+                                    backgroundColor: '#e9ecef', // Light background color for the row
+                                    color: '#343a40', // Dark text color
+                                    borderBottom: '2px solid #dee2e6', // Bottom border for rows
+                                    transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+                                }}
+                            >
+                                <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Number</th>
+                                <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Status</th>
+                                <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Call Status</th>
+                                <th style={{ backgroundColor: '#f8f9fd' }} className="equal-width">Actions</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             {filteredPhonebookData.map((entry, index) => (
                                 <tr key={index}>
-                                    <td style={{ textAlign: 'center' }}>{entry.number}</td>
-                                    <td style={{ textAlign: 'center' }}>{entry.status}</td>
+                                    <td className='table_td_class' >{entry.number}</td>
+                                    <td className='table_td_class' >{entry.status}</td>
                                     <td
                                         style={{
                                             textAlign: 'center',
                                             backgroundColor: entry.calstatus === 'No Answer' ? 'green' : entry.calstatus === 'Not Interested' ? 'red' : 'transparent',
                                             color: entry.calstatus === 'No Answer' || entry.calstatus === 'Not Interested' ? 'white' : 'inherit'
                                         }}
+                                        className='table_td_class'
                                     >
                                         {entry.calstatus}
                                     </td>
-                                    <td style={{ textAlign: 'center' }}>
+                                    <td style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
                                         {dropdownEntry && dropdownEntry._id === entry._id ? (
                                             <Dropdown>
                                                 <Dropdown.Toggle className="dropdown_menu" id="dropdown-basic">
@@ -247,18 +255,24 @@ const Home = () => {
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                         ) : (
-                                            <CiEdit
-                                                onClick={() => setDropdownEntry(entry)}
-                                                style={{ fontSize: '20px', cursor: 'pointer' }}
-                                            />
+                                            <div className='editAction'>
+                                                <FiEdit2
+                                                    onClick={() => setDropdownEntry(entry)}
+                                                    style={{ fontSize: '12px', cursor: 'pointer', color: 'white' }}
+                                                />
+                                                <div className="tooltip">Edit Status</div>
+                                            </div>
                                         )}
+                                        <div className='addAction'>
+                                            <MdAdd onClick={() => handleAddCommentClick(entry)} style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }} />
+                                            <div className="tooltip">Add Comments</div>
+                                        </div>
+                                        <div className='viewAction'>
+                                            <AiOutlineEye onClick={() => handleViewCommentsClick(entry)} style={{ fontSize: '15px', cursor: 'pointer', color: 'white' }} />
+                                            <div className="tooltip">View Comments</div>
+                                        </div>
                                     </td>
-                                    <td style={{ textAlign: 'center' }}>
-                                        <MdAdd onClick={() => handleAddCommentClick(entry)} style={{ fontSize: '20px', cursor: 'pointer' }} />
-                                    </td>
-                                    <td style={{ textAlign: 'center' }}>
-                                        <GrView onClick={() => handleViewCommentsClick(entry)} style={{ fontSize: '20px', cursor: 'pointer' }} />
-                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>
